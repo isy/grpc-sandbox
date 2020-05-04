@@ -3,7 +3,7 @@ settings:
     force: false
     interval: 0s
 schema:
-- name: user-service
+- name: server
   path: .
   commands:
     run:
@@ -12,7 +12,8 @@ schema:
     extensions:
     - go
     paths:
-    - ../../
+    - /
     ignored_paths:
-    - ../../../.git
+    - .git
     - .realize
+    - vendor
