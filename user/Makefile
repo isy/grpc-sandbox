@@ -5,3 +5,6 @@ build:
 
 mod:
 	GO111MODULE=on go mod download
+
+grpc/cli:
+	evans -r -p8080 repl

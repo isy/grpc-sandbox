@@ -13,7 +13,7 @@ RUN make mod \
 
 FROM alpine:3.10 AS app
 
-COPY --from=build /go/src/github.com/isy/grpc-sandbox/user/build/server /usr/local/bin/user-service
+COPY --from=build /go/src/github.com/isy/grpc-sandbox/user/build/user-service /usr/local/bin/user-service
 
 RUN apk add --no-cache ca-certificates
 

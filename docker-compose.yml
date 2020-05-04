@@ -5,7 +5,7 @@ services:
     build:
       context: './user'
       target: build
-    command: ["sh", "-c", "cd ./user && make mod && cd ./cmd/server && realize start"]
+    command: ["sh", "-c", "make mod && cd ./cmd/server && realize start"]
     ports:
       - "8080:8080"
     environment:
@@ -13,4 +13,4 @@ services:
       PORT: 8080
       TZ: Asia/Tokyo
     volumes:
-      - ".:/go/src/github.com/isy/grpc-sandbox/user"
+      - "./user:/go/src/github.com/isy/grpc-sandbox/user"

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "google.golang.org/grpc/health/grpc_health_v1";
+option go_package = "google.golang.org/grpc/health/grpc_health_v1;user";
 
 message HealthCheckRequest {
     string service = 1;
