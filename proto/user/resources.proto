@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/isy/grpc-sandbox/user;user";
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+    // reserved .....  Already deleted tags is here
+
+    int64 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    enum Gender {
+        UNKNOWN = 0;
+        MALE = 1;
+        FEMALE = 2;
+    }
+    Gender gender = 4;
+    google.protobuf.Timestamp created_at = 5;
+}

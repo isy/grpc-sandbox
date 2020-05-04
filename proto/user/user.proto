@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/isy/grpc-sandbox/user;user";
+
+import "google/protobuf/empty.proto";
+import "rpc.proto";
+
+
+service UserService {
+    rpc ListUsers (google.protobuf.Empty) returns (ListUsersResponse);
+}
