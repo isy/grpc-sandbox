@@ -32,6 +32,16 @@ else
   echo "Protobuf found."
 fi
 
+# bufbuild/buf
+if test ! $(which buf)
+then
+  echo "...Installing buf"
+  brew tap bufbuild/buf
+  brew install buf
+else
+  echo "buf found."
+fi
+
 # Genarated golang server *.pb.go
 protoc \
   --proto_path=./user \

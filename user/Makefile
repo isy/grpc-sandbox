@@ -8,3 +8,6 @@ mod:
 
 grpc/cli:
 	evans -r -p8080 repl
+
+
+.PHONY: build mod
