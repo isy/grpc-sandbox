@@ -4,7 +4,7 @@ package user;
 
 option go_package = "github.com/isy/grpc-sandbox/user;user";
 
-import "resources.proto";
+import "user/resources.proto";
 
 message ListUsersResponse {
     repeated User users = 1;

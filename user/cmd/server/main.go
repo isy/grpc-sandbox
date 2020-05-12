@@ -10,34 +10,38 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	pb "github.com/isy/grpc-sandbox/user/app/interface/grpc"
+	// "github.com/grpc-ecosystem/go-grpc-middleware"
+
+	pb "github.com/isy/grpc-sandbox/user/pb/user"
 )
 
-type Service struct{}
+type userService struct{}
 
 func main() {
 	lis, err := net.Listen("tcp", ":8080")
-	server := grpc.NewServer()
+	s := grpc.NewServer(
+	// grpc.StreamInterceptor()
+	)
 
-	s := &Service{}
+	us := &userService{}
 
-	pb.RegisterUserServiceServer(server, s)
+	pb.RegisterUserServiceServer(s, us)
 
-	reflection.Register(server)
+	reflection.Register(s)
 
 	if err != nil {
 		fmt.Println("network I/O error: %v", err)
 		os.Exit(1)
 	}
 
-	if err := server.Serve(lis); err != nil {
+	if err := s.Serve(lis); err != nil {
 		fmt.Printf("serve error: %v", err)
 		os.Exit(1)
 	}
 	fmt.Println("Run server")
 }
 
-func (s *Service) ListUsers(ctx context.Context, in *emptypb.Empty) (*pb.ListUsersResponse, error) {
+func (s *userService) ListUsers(ctx context.Context, in *emptypb.Empty) (*pb.ListUsersResponse, error) {
 	fmt.Println("test")
 
 	return &pb.ListUsersResponse{
