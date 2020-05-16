@@ -4,10 +4,14 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
 	// "golang.org/x/xerrors"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -15,6 +19,8 @@ import (
 )
 
 func main() {
+	logger, _ := zap.NewProduction()
+	logger.Info("Hello！！！", zap.String("キー", "だよ"), zap.Time("time", time.Now()))
 	e := echo.New()
 
 	e.Pre(middleware.AddTrailingSlash())
@@ -52,5 +58,19 @@ func main() {
 		}
 	}
 
-	e.Logger.Fatal(e.Start(":8080"))
+	go func() {
+		if err := e.Start(":8080"); err != nil {
+			log.Print("shutdown server")
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		log.Fatal(err)
+	}
+	// e.Logger.Fatal(e.Start(":8080"))
 }
