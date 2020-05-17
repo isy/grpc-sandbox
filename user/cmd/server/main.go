@@ -1,31 +1,33 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"os"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	// "github.com/grpc-ecosystem/go-grpc-middleware"
 
+	"github.com/isy/grpc-sandbox/user/app/infra/dao"
+	"github.com/isy/grpc-sandbox/user/app/usecase"
 	pb "github.com/isy/grpc-sandbox/user/pb/user"
+	grpc_ui "github.com/isy/grpc-sandbox/user/presentation/grpc"
 )
 
-type userService struct{}
-
 func main() {
+	// DI
+	userRepo := dao.NewUser()
+	userUseCase := usecase.NewUser(userRepo)
+	grcpUserUI := grpc_ui.NewUser(userUseCase)
+
 	lis, err := net.Listen("tcp", ":8080")
 	s := grpc.NewServer(
 	// grpc.StreamInterceptor()
 	)
 
-	us := &userService{}
-
-	pb.RegisterUserServiceServer(s, us)
+	pb.RegisterUserServiceServer(s, grcpUserUI)
 
 	reflection.Register(s)
 
@@ -39,14 +41,4 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println("Run server")
-}
-
-func (s *userService) ListUsers(ctx context.Context, in *emptypb.Empty) (*pb.ListUsersResponse, error) {
-	fmt.Println("test")
-
-	return &pb.ListUsersResponse{
-		Users: []*pb.User{
-			{Id: 1},
-		},
-	}, nil
 }
