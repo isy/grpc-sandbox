@@ -11,16 +11,16 @@ import (
 	// "github.com/grpc-ecosystem/go-grpc-middleware"
 
 	"github.com/isy/grpc-sandbox/user/app/infra/dao"
+	ui_grpc "github.com/isy/grpc-sandbox/user/app/presentation/grpc"
 	"github.com/isy/grpc-sandbox/user/app/usecase"
 	pb "github.com/isy/grpc-sandbox/user/pb/user"
-	grpc_ui "github.com/isy/grpc-sandbox/user/presentation/grpc"
 )
 
 func main() {
 	// DI
 	userRepo := dao.NewUser()
 	userUseCase := usecase.NewUser(userRepo)
-	grcpUserUI := grpc_ui.NewUser(userUseCase)
+	grcpUserUI := ui_grpc.NewUser(userUseCase)
 
 	lis, err := net.Listen("tcp", ":8080")
 	s := grpc.NewServer(
