@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/signal"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -36,9 +37,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := s.Serve(lis); err != nil {
-		fmt.Printf("serve error: %v", err)
-		os.Exit(1)
-	}
-	fmt.Println("Run server")
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			fmt.Printf("serve error: %v", err)
+			os.Exit(1)
+		}
+	}()
+	defer s.GracefulStop()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
 }
