@@ -2,24 +2,30 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"github.com/isy/grpc-sandbox/gateway/lib/logger"
 	pb_user "github.com/isy/grpc-sandbox/gateway/pb/user"
 )
 
 func main() {
-	logger, _ := zap.NewProduction()
-	logger.Info("Hello！！！", zap.String("キー", "だよ"), zap.Time("time", time.Now()))
+	// lib
+	if err := logger.NewLogger(); err != nil {
+		fmt.Printf("Initialization error of zap logger: %v", err)
+	}
+
 	e := echo.New()
 
 	e.Pre(middleware.AddTrailingSlash())
@@ -27,7 +33,15 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	conn, err := grpc.Dial("user-service:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial(
+		"user-service:8080",
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(
+			grpc_middleware.ChainUnaryClient(
+				grpc_zap.UnaryClientInterceptor(logger.GetLogger()),
+			),
+		),
+	)
 
 	if err != nil {
 		log.Fatal("client connection err:", err)
@@ -45,7 +59,6 @@ func main() {
 		users := v1.Group("/users")
 		{
 			users.GET("/", func(c echo.Context) error {
-				// return xerrors.New("エラー")
 				message := &emptypb.Empty{}
 				res, err := client.ListUsers(context.Background(), message)
 				if err != nil {
