@@ -1,11 +1,11 @@
 package mysql
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/xerrors"
 )
 
 type MySQL struct {
@@ -17,12 +17,12 @@ func NewDB() (*MySQL, error) {
 
 	master, err := sqlx.Open("mysql", masterDSN())
 	if err != nil {
-		return nil, xerrors.Errorf("sqlx open error: %w", err)
+		return nil, fmt.Errorf("sqlx open error: %w", err)
 	}
 
 	slave, err := sqlx.Open("mysql", masterDSN()) // TODO: Prepare a DSN for slave
 	if err != nil {
-		return nil, xerrors.Errorf("sqlx open error: %w", err)
+		return nil, fmt.Errorf("sqlx open error: %w", err)
 	}
 
 	return &MySQL{

@@ -8,7 +8,6 @@ import (
 	"os/signal"
 	"time"
 
-	// "golang.org/x/xerrors"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
@@ -69,8 +68,8 @@ func main() {
 	<-quit
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
+
 	if err := e.Shutdown(ctx); err != nil {
 		log.Fatal(err)
 	}
-	// e.Logger.Fatal(e.Start(":8080"))
 }
