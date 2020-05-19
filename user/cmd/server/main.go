@@ -9,11 +9,13 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	// "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 
 	"github.com/isy/grpc-sandbox/user/app/infra/dao"
 	ui_grpc "github.com/isy/grpc-sandbox/user/app/presentation/grpc"
 	"github.com/isy/grpc-sandbox/user/app/usecase"
+	"github.com/isy/grpc-sandbox/user/lib/logger"
 	pb "github.com/isy/grpc-sandbox/user/pb/user"
 )
 
@@ -23,9 +25,16 @@ func main() {
 	userUseCase := usecase.NewUser(userRepo)
 	grcpUserUI := ui_grpc.NewUser(userUseCase)
 
+	// lib
+	if err := logger.NewLogger(); err != nil {
+		fmt.Printf("Initialization error of zap logger: %v", err)
+	}
+
 	lis, err := net.Listen("tcp", ":8080")
 	s := grpc.NewServer(
-	// grpc.StreamInterceptor()
+		grpc_middleware.WithUnaryServerChain(
+			grpc_zap.UnaryServerInterceptor(logger.GetLogger()),
+		),
 	)
 
 	pb.RegisterUserServiceServer(s, grcpUserUI)
@@ -33,7 +42,7 @@ func main() {
 	reflection.Register(s)
 
 	if err != nil {
-		fmt.Println("network I/O error: %v", err)
+		fmt.Printf("network I/O error: %v", err)
 		os.Exit(1)
 	}
 
