@@ -12,6 +12,9 @@ services:
       HOST: "0.0.0.0"
       PORT: 8080
       TZ: Asia/Tokyo
+      MYSQL_USER: user
+      MYSQL_PASS: password
+      MYSQL_DB_NAME: user
     depends_on:
       - user-mysql
     volumes:
