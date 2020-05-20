@@ -9,15 +9,12 @@ import (
 	"os/signal"
 	"time"
 
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"github.com/isy/grpc-sandbox/gateway/app/service"
 	"github.com/isy/grpc-sandbox/gateway/lib/logger"
-	pb_user "github.com/isy/grpc-sandbox/gateway/pb/user"
 )
 
 func main() {
@@ -29,26 +26,10 @@ func main() {
 	e := echo.New()
 
 	e.Pre(middleware.AddTrailingSlash())
-
-	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	conn, err := grpc.Dial(
-		"user-service:8080",
-		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(
-			grpc_middleware.ChainUnaryClient(
-				grpc_zap.UnaryClientInterceptor(logger.GetLogger()),
-			),
-		),
-	)
-
-	if err != nil {
-		log.Fatal("client connection err:", err)
-	}
-	defer conn.Close()
-
-	client := pb_user.NewUserServiceClient(conn)
+	client := service.BindGrpcClient()
+	defer client.Close()
 
 	e.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, "Running!!")
@@ -60,9 +41,9 @@ func main() {
 		{
 			users.GET("/", func(c echo.Context) error {
 				message := &emptypb.Empty{}
-				res, err := client.ListUsers(context.Background(), message)
+				res, err := client.UserClient.Client.ListUsers(context.Background(), message)
 				if err != nil {
-					log.Fatal("request fail:", err)
+					fmt.Printf("request fail: %v", err)
 					return c.JSON(http.StatusInternalServerError, err)
 				}
 				return c.JSON(http.StatusOK, res)
@@ -83,6 +64,6 @@ func main() {
 	defer cancel()
 
 	if err := e.Shutdown(ctx); err != nil {
-		log.Fatal(err)
+		fmt.Printf("Shutdown error: %v", err)
 	}
 }
