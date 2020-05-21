@@ -1,5 +1,0 @@
-package rest
-
-func serve() {
-
-}

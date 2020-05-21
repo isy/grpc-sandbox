@@ -1,9 +1,9 @@
-package service
+package grpc
 
 import (
 	"fmt"
 
-	"github.com/isy/grpc-sandbox/gateway/app/service/user"
+	"github.com/isy/grpc-sandbox/gateway/app/infra/grpc/user"
 )
 
 type Client struct {
