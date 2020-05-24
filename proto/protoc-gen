@@ -13,6 +13,8 @@ else
   echo "go found."
 fi
 
+## FIXME: Make it work in containers
+
 # Golang gRPC Library
 if test ! $(which protoc-gen-go)
 then
@@ -47,12 +49,19 @@ protoc \
   --proto_path=. \
   --go_out=plugins=grpc:../user/pb \
   --go_opt=paths=source_relative \
-  user/*.proto
+  **/*.proto
 
 
 # Genarated golang gateway server *.pb.go
-protoc \
-  --proto_path=. \
-  --go_out=plugins=grpc:../gateway/pb/ \
-  --go_opt=paths=source_relative \
-  user/*.proto
+# protoc \
+#   --proto_path=. \
+#   --go_out=plugins=grpc:../gateway/pb/ \
+#   --go_opt=paths=source_relative \
+#   **/*.proto
+
+# # Genarated golang payment server *.pb.go
+# protoc \
+#   --proto_path=. \
+#   --go_out=plugins=grpc:../payment/pb/ \
+#   --go_opt=paths=source_relative \
+#   **/*.proto

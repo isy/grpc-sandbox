@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package payment.ios;
+
+option go_package = "github.com/isy/grpc-sandbox/payment;ios";
+
+message VerifyReceiptRequest {
+    bytes receipt_data = 1;
+    string password = 2;
+}
