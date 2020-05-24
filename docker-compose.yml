@@ -32,6 +32,19 @@ services:
       TZ: Asia/Tokyo
     volumes:
       - mysql-data:/var/lib/mysql
+  payment:
+    build:
+      context: './payment'
+      target: build
+    command: ["sh", "-c", "make mod && cd ./cmd/server && realize start"]
+    ports:
+      - "8082:8080"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: 8080
+      TZ: Asia/Tokyo
+    volumes:
+      - "./user:/go/src/github.com/isy/grpc-sandbox/payment"
   gateway:
     build:
       context: './gateway'
