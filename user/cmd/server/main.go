@@ -11,6 +11,7 @@ import (
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_health "google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/isy/grpc-sandbox/user/app/infra/dao"
 	ui_grpc "github.com/isy/grpc-sandbox/user/app/presentation/grpc"
@@ -25,6 +26,8 @@ func main() {
 	userUseCase := usecase.NewUser(userRepo)
 	grcpUserUI := ui_grpc.NewUser(userUseCase)
 
+	grpcHealthUI := ui_grpc.NewHealth()
+
 	// lib
 	if err := logger.NewLogger(); err != nil {
 		fmt.Printf("Initialization error of zap logger: %v", err)
@@ -38,6 +41,7 @@ func main() {
 	)
 
 	pb.RegisterUserServiceServer(s, grcpUserUI)
+	grpc_health.RegisterHealthServer(s, grpcHealthUI)
 
 	reflection.Register(s)
 
