@@ -53,15 +53,15 @@ protoc \
 
 
 # Genarated golang gateway server *.pb.go
-# protoc \
-#   --proto_path=. \
-#   --go_out=plugins=grpc:../gateway/pb/ \
-#   --go_opt=paths=source_relative \
-#   **/*.proto
+protoc \
+  --proto_path=. \
+  --go_out=plugins=grpc:../gateway/pb/ \
+  --go_opt=paths=source_relative \
+  **/*.proto
 
-# # Genarated golang payment server *.pb.go
-# protoc \
-#   --proto_path=. \
-#   --go_out=plugins=grpc:../payment/pb/ \
-#   --go_opt=paths=source_relative \
-#   **/*.proto
+# Genarated golang payment server *.pb.go
+protoc \
+  --proto_path=. \
+  --go_out=plugins=grpc:../payment/pb/ \
+  --go_opt=paths=source_relative \
+  **/*.proto
