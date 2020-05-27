@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	storePrd     = "https://buy.itunes.apple.com/verifyReceipt"
-	storeSandbox = "https://sandbox.itunes.apple.com/verifyReceipt"
+	storePrd     = "https://buy.itunes.apple.com"
+	storeSandbox = "https://sandbox.itunes.apple.com"
 )
 
 type AppStoreClient struct {
