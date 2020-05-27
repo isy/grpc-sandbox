@@ -1,7 +1,9 @@
 package rest
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
@@ -29,7 +31,20 @@ func (c *Client) NewReq(ctx context.Context, method, spath string, body io.Reade
 	}
 
 	req = req.WithContext(ctx)
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 
 	return req, nil
+}
+
+func EncodeBody(in interface{}) (io.Reader, error) {
+	b := new(bytes.Buffer)
+
+	return b, json.NewEncoder(b).Encode(in)
+}
+
+func DecodeBody(res *http.Response, out interface{}) error {
+	defer res.Body.Close()
+	d := json.NewDecoder(res.Body)
+
+	return d.Decode(out)
 }
