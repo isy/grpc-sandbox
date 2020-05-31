@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/isy/grpc-sandbox/payment/app/usecase"
-	pb_ios "github.com/isy/grpc-sandbox/payment/pb/payment/ios"
+	pb "github.com/isy/grpc-sandbox/payment/pb/payment"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type (
 	Ios interface {
-		VerifyReceipt(ctx context.Context, in *pb_ios.VerifyReceiptRequest) (*emptypb.Empty, error)
+		AppleVerifyReceipt(ctx context.Context, in *pb.AppleVerifyReceiptRequest) (*emptypb.Empty, error)
 	}
 	ios struct {
 		uc usecase.Ios
@@ -18,9 +18,14 @@ type (
 )
 
 func NewIos(usecase usecase.Ios) Ios {
-	return &ios{}
+	return &ios{
+		uc: usecase,
+	}
 }
 
-func (i *ios) VerifyReceipt(ctx context.Context, in *pb_ios.VerifyReceiptRequest) (*emptypb.Empty, error) {
+func (i *ios) AppleVerifyReceipt(ctx context.Context, in *pb.AppleVerifyReceiptRequest) (*emptypb.Empty, error) {
+	if err := i.uc.VerifyReceipt(ctx, in.ReceiptData); err != nil {
+		return nil, err
+	}
 	return &emptypb.Empty{}, nil
 }

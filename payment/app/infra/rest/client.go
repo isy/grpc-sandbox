@@ -17,7 +17,8 @@ type Client struct {
 
 func NewHttpClient(baseUrl *url.URL) *Client {
 	return &Client{
-		Url: baseUrl,
+		Url:    baseUrl,
+		Client: &http.Client{},
 	}
 }
 

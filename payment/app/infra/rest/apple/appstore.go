@@ -14,7 +14,7 @@ var (
 	ErrAppStoreServer = errors.New("AppStore server error")
 )
 
-func (a *AppStoreClient) ReqVerifyReceipt(ctx context.Context, receipt []byte) (*VerifyReceiptResponse, error) {
+func (a *AppStoreClient) ReqVerifyReceipt(ctx context.Context, receipt string) (*VerifyReceiptResponse, error) {
 	body := &VerifyReceiptRequest{
 		ReceiptData:            receipt,
 		Password:               appleSharedSecret,

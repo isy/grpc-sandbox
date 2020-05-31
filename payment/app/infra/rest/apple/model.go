@@ -82,8 +82,8 @@ type (
 
 	// https://developer.apple.com/documentation/appstorereceipts/requestbody
 	VerifyReceiptRequest struct {
-		ReceiptData            []byte `json:"receipt-data"`
-		Password               string `json:"password,omitempty"`
+		ReceiptData            string `json:"receipt-data"`
+		Password               string `json:"password"`
 		ExcludeOldTransactions bool   `json:"exclude-old-transactions,omitempty"`
 	}
 
@@ -91,7 +91,7 @@ type (
 	VerifyReceiptResponse struct {
 		Environment        Environment          `json:"environment"`
 		IsRetryable        bool                 `json:"is-retryable"`
-		LatestReceipt      []byte               `json:"latest_receipt"`
+		LatestReceipt      string               `json:"latest_receipt"`
 		LatestReceiptInfo  []ReceiptInfo        `json:"latest_receipt_info"`
 		PendingRenewalInfo []PendingRenewalInfo `json:"pending_renewal_info"`
 		Receipt            Receipt              `json:"receipt"`

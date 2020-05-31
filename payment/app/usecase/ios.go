@@ -8,20 +8,25 @@ import (
 
 type (
 	Ios interface {
-		VerifyReceipt(ctx context.Context, receipt []byte, password string)
+		VerifyReceipt(ctx context.Context, receipt string) error
 	}
 
 	ios struct {
-		ur repository.Ios
+		ri repository.Ios
 	}
 )
 
-func NewIos(ur repository.Ios) Ios {
+func NewIos(ri repository.Ios) Ios {
 	return &ios{
-		ur: ur,
+		ri: ri,
 	}
 }
 
-func (i *ios) VerifyReceipt(ctx context.Context, receipt []byte, password string) {
+func (i *ios) VerifyReceipt(ctx context.Context, receipt string) error {
+	_, err := i.ri.IosVerify(ctx, receipt)
+	if err != nil {
+		return err
+	}
 
+	return nil
 }
