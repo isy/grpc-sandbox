@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "github.com/isy/grpc-sandbox/payment;payment";
+
+message AppleVerifyReceiptRequest {
+    string receipt_data = 1;
+}

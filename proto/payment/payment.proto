@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "github.com/isy/grpc-sandbox/payment;payment";
+
+import "google/protobuf/empty.proto";
+// import "google/api/annotations.proto";
+import "payment/message.proto";
+
+
+service PaymentService {
+    rpc AppleVerifyReceipt (AppleVerifyReceiptRequest) returns (google.protobuf.Empty);
+
+    // HTTP/JSON 
+    // Apple Subscription Notifications
+    // rpc AppleIncoming(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    //     option (google.api.http) = { post: "/incoming/apple" };
+    // }
+}
