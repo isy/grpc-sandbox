@@ -38,13 +38,13 @@ services:
       target: build
     command: ["sh", "-c", "make mod && cd ./cmd/server && realize start"]
     ports:
-      - "8082:8080"
+      - "8082:8082"
     environment:
       HOST: "0.0.0.0"
-      PORT: 8080
+      PORT: 8082
       TZ: Asia/Tokyo
     volumes:
-      - "./user:/go/src/github.com/isy/grpc-sandbox/payment"
+      - "./payment:/go/src/github.com/isy/grpc-sandbox/payment"
   gateway:
     build:
       context: './gateway'

@@ -16,6 +16,6 @@ COPY --from=build /go/src/github.com/isy/grpc-sandbox/payment/build/payment /usr
 
 RUN apk add --no-cache ca-certificates
 
-EXPOSE 8080
+EXPOSE 8082
 
 CMD ["payment"]
